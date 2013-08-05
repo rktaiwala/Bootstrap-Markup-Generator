@@ -27,11 +27,11 @@
 		<div class="col-lg-3">
 			<div class="bs-sidebar " >
 				<ul class="nav bs-sidenav ">
-				<li class="active"> <a href="">Tags</a>
+				<li class=""> <a href="" class="menu-name">Tags</a>
 					<ul id="tags" class="nav">
 					</ul>
 				</li>
-				<li class="active"><a href="">Class Names</a>
+				<li class=""><a href="" class="menu-name">Class Names</a>
 				<ul id="classname" class="nav">
 					
 				</ul>
@@ -51,6 +51,8 @@
 	<head>
 		<title>HTML Example</title>
 		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">
+		<script src="http://code.jquery.com/jquery.js"></script>
+		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>
 	</head>
 	<body>
 	
@@ -76,8 +78,8 @@
 		autofocus:true
       });
 	  var startcur=editor.getCursor();
-	  editor.setCursor(CodeMirror.Pos(startcur.line + 6, 0));
-	  editor.indentLine(startcur.line + 6,"add");
+	  editor.setCursor(CodeMirror.Pos(startcur.line + 8, 0));
+	  editor.indentLine(startcur.line + 8,"add");
 	  //var doIndent=true;
 	  //var curPos = doIndent ? CodeMirror.Pos(pos.line + 1, 0) : CodeMirror.Pos(pos.line, pos.ch + 1);
       //cm.replaceSelection(">" + (doIndent ? "\n\n" : "") + "</" + tagName + ">",
@@ -97,6 +99,21 @@
       setTimeout(updatePreview, 300);
 	  
 	  $(document).ready(function(){
+	  $('.menu-name').on('click',function(e){
+		e.preventDefault();
+		var prnt=e.target.parentElement;
+		
+		
+		if(prnt.className!=''){
+			prnt.className='';
+			
+		}else{
+			$('ul.nav li').each(function(){
+				$(this).removeClass('active');
+			});
+			prnt.className='active';
+		}
+	  });
 	$('#tags').on('click','a',function(e){
 		e.preventDefault();
 		//alert(e.target.hash);
