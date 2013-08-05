@@ -22,4 +22,6 @@
 	"Tr":"<tr class=''></tr>",
 	"Th":"<th class=''></th>",
 	"Td":"<td class=''></td>",
+	"Button":"<button type='button' class=''></button>",
+	"Span":"<span class=''></span>",
 }
