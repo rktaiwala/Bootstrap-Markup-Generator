@@ -1,4 +1,8 @@
 Bootstrap-Markup-Generator
 ==========================
 
-Generates Html markup using bootstrap classes
+Helps you generate HTML markup to be used with Twitter Bootstrap.
+
+All the Bootstrap classes can be included with just one click.
+
+Its still in the development phase, So lots of feature yet to come.  Till then ease you HTML markup with this.
