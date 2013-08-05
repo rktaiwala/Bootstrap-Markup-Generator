@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">
+<link href="css/docs.css" rel="stylesheet">
+<!-- Latest compiled and minified JavaScript -->
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
+  <div class="container">
+    <a href="#" class="navbar-brand" style="max-width:100%">Bootstrap 3 HTML Markup generator</a>
+    
+    <div class="nav-collapse collapse bs-navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="#">Getting started</a>
+        </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="container">
+	<div calss="row">
+		<div class="col-lg-3">
+			<div class="bs-sidebar " >
+				<ul class="nav bs-sidenav ">
+				<li class="active"> <a href="">Tags</a>
+					<ul id="tags" class="nav">
+					</ul>
+				</li>
+				<li class="active"><a href="">Class Names</a>
+				<ul id="classname" class="nav">
+					
+				</ul>
+				</li>
+				</ul>
+			</div>
+			
+		</div>
+		<div class="col-lg-9 ">
+			<div class="row affix">
+			<div class="col-lg-9 " style="margin-top:30px">
+				<iframe id=preview style="width:100%"></iframe>
+			</div>
+			<div  class="col-lg-9">
+<textarea id="code" name="code">
+<html>
+	<head>
+		<title>HTML Example</title>
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">
+	</head>
+	<body>
+	
+	</body>
+</html>
+</textarea>
+			</div>
+		</div>	
+		</div>
+	</div>
+</div>
+<script src="lib/codemirror.js"></script>
+<link rel="stylesheet" href="lib/codemirror.css">
+<script src="mode/javascript/javascript.js"></script>
+<script src="main.js"></script>
+<script>
+      var delay;
+      // Initialize CodeMirror editor with a nice html5 canvas demo.
+      var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
+        mode: 'text/html',
+        tabMode: 'indent',
+		lineNumbers: true,
+		autofocus:true
+      });
+	  var startcur=editor.getCursor();
+	  editor.setCursor(CodeMirror.Pos(startcur.line + 6, 0));
+	  editor.indentLine(startcur.line + 6,"add");
+	  //var doIndent=true;
+	  //var curPos = doIndent ? CodeMirror.Pos(pos.line + 1, 0) : CodeMirror.Pos(pos.line, pos.ch + 1);
+      //cm.replaceSelection(">" + (doIndent ? "\n\n" : "") + "</" + tagName + ">",
+                          //{head: curPos, anchor: curPos});
+      editor.on("change", function() {
+        clearTimeout(delay);
+        delay = setTimeout(updatePreview, 300);
+      });
+      
+      function updatePreview() {
+        var previewFrame = document.getElementById('preview');
+        var preview =  previewFrame.contentDocument ||  previewFrame.contentWindow.document;
+        preview.open();
+        preview.write(editor.getValue());
+        preview.close();
+      }
+      setTimeout(updatePreview, 300);
+	  
+	  $(document).ready(function(){
+	$('#tags').on('click','a',function(e){
+		e.preventDefault();
+		//alert(e.target.hash);
+		var tagName=(e.target.hash).replace('#','');
+		var tag=taglists[tagName];
+		tag=tag.replace(/(<.*(?=[<]))/,'$1\n\n');
+		//var toPos=tag.match(/<.*(?=[<])/)[0].length;
+		var pos=editor.getCursor();
+		var toPos=CodeMirror.Pos(pos.line + 1, 0);
+		editor.replaceSelection(tag,{head: toPos, anchor: toPos});
+		editor.indentLine(pos.line +1);
+        editor.indentLine(pos.line + 2);
+		editor.focus();
+		editor.indentLine(toPos.line,"add");
+	});
+	$('#classname').on('click','a',function(e){
+		e.preventDefault();
+		var clsname=(e.target.hash).replace('#.','');
+		//alert(clsname);
+		var pos=editor.getCursor();
+		var tok=editor.getTokenAt(pos);
+		var prevCh=editor.getRange(CodeMirror.Pos(pos.line,pos.ch-1),pos);
+		var nxtCh=editor.getRange(pos,CodeMirror.Pos(pos.line,pos.ch+1));
+		if(prevCh=="'" || nxtCh=="'"){
+			editor.replaceSelection(clsname+' ',{head: pos, anchor: pos});
+			editor.setCursor(CodeMirror.Pos(pos.line,pos.ch+clsname.length+1));
+		}else if(prevCh==" " && nxtCh==""){
+			editor.setCursor(CodeMirror.Pos(pos.line-1,0));
+			var posc=editor.getCursor();
+			var lineData=editor.lineInfo(posc.line);
+			editor.setCursor(CodeMirror.Pos(posc.line,lineData.text.length-2));
+			posc=editor.getCursor();
+			var prevCh=editor.getRange(CodeMirror.Pos(posc.line,posc.ch-1),posc);
+			if(prevCh!="'" || prevCh!=" "){
+				editor.replaceSelection(' '+clsname+' ',{head: posc, anchor: posc});
+				editor.setCursor(CodeMirror.Pos(pos.line,pos.ch+clsname.length+2));
+			}else{
+				editor.replaceSelection(clsname+' ',{head: posc, anchor: posc});
+				editor.setCursor(CodeMirror.Pos(pos.line,pos.ch+clsname.length+1));
+			}
+			
+			pos=editor.getCursor();
+		}
+		
+		editor.focus();
+		console.log(prevCh+nxtCh);
+	});
+});
+</script>
+
+</body>
+</html>
