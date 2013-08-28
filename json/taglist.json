@@ -24,4 +24,9 @@
 	"Td":"<td class=''></td>",
 	"Button":"<button type='button' class=''></button>",
 	"Span":"<span class=''></span>",
+	"Form":"<form class=''></form>",
+	"Label":"<label for='' class=''></label>",
+	"Input Text":"<input type='text' class=''>",
+	"Input Password":"<input type='password' class=''>",
+	"Submit":"<input type='submit' class=''>",
 }
